@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>iLert Uptime monitor integration sample</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+        <script>
+            (() => {
+                
+                /*
+                    Using axios as preferred http client here, you can of course
+                    use any kind of http client or run plain vanilla ajax calls
+                    if you like.
+                */
+               
+                const createNewMonitor = (name, url) => {
+                    axios
+                        .post("/monitor-sample", { name, url})
+                        .then((response) => {
+                            if(response.status === 201) {
+                                getMonitors();
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        })
+                };
+
+                const getMonitors = () => {
+                    axios
+                        .get("/monitor-sample")
+                        .then((response) => {
+                            if(response.status === 200) {
+                                _renderMonitors(response.data);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                };
+
+                const _renderMonitors = (monitors) => {
+                    const container = document.getElementById("monitors");
+                    container.innerHTML = "";
+                    monitors.forEach((monitor) => {
+                        console.log(monitor);
+
+                        const base = document.createElement("div");
+                        base.className =  "monitor";
+
+                        const name = document.createElement("span");
+                        name.innerText = monitor.name;
+                        name.style.marginRight = "10px";
+                        base.appendChild(name);
+
+                        const url = document.createElement("span");
+                        url.innerText = monitor.checkParams.url;
+                        base.appendChild(url);
+
+                        base.appendChild(document.createElement("br"));
+
+                        const iframe = document.createElement("iframe");
+                        iframe.setAttribute("src", monitor.embedUrl);
+                        iframe.style.width = "370px";
+                        iframe.style.height = "408px";
+                        base.appendChild(iframe);
+
+                        container.appendChild(base);
+                    });
+                };
+
+                window.onload = () => {
+                    getMonitors();
+
+                    const button = document.getElementById("new-monitor");
+                    button.onclick = () => {
+                        const name = document.getElementById("new-name");
+                        const url = document.getElementById("new-url");
+                        createNewMonitor(name.value, url.value);
+                        name.value = "";
+                        url.value = "";
+                    };
+                };
+            })();
+        </script>
+        <style>
+            #monitors {
+                margin-top: 20px;
+                width: 100%;
+                height: 800px;
+            }
+            .monitor {
+                margin: 2px;
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Uptime monitor integration sample</h1>
+
+       <div>
+            <label for="new-name">Name:</label>
+            <input type="text" id="new-name" /><br/>
+
+            <div style="margin-top: 10px; margin-bottom: 10px;">
+                <label for="new-url" style="padding-right: 17px;">Url:</label>
+                <input type="text" id="new-url" style="width: 250px;"/>
+            </div>
+
+            <button id="new-monitor" type="button">
+                Create new monitor
+            </button>
+       </div>
+
+        <div id="monitors">
+        </div>
+    </body>
+</html>
