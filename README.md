@@ -1,6 +1,6 @@
 # iLert uptime monitor integration sample
 
-This setup is a resource that has been created for our blogpost on [building integrations with the iLert API for uptime monitoring and shareable reports]().
+This setup is a resource that has been created for our blogpost on [building integrations with the iLert API for uptime monitoring and shareable reports](https://engineering.ilert.com/dynamic-uptime-monitor-report-integrations-22-05-2020).
 
 ## Requirements
 
@@ -10,10 +10,10 @@ This setup is a resource that has been created for our blogpost on [building int
 
 ## Setup & run
 
-* clone this repository `git clone `
+* clone this repository `git clone git@github.com:iLert/uptime-monitor-integration-sample.git`
 * move to server dir `cd server`
 * install dependencies `npm install`
-* update `./server/server.js#13` with your iLert user information
+* update `./server.js#13` with your iLert user information
 * start server `npm start`
 * visit `http://localhost:3333` in your browser
 
